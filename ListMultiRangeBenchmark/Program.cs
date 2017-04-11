@@ -24,19 +24,38 @@ namespace ListMultiRangeBenchmark
             return strings.ToArray();
         }
 
+        static TimeSpan CallWithTimer(Action a)
+        {
+            var start = DateTime.Now;
+            a();
+            return DateTime.Now - start;
+        }
+
         static void Main(string[] args)
         {
             rand = new Random();
             abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
             var ranges = new List<string[]>();
-            for (int i = 0; i < 500; i++)
-                ranges.Add(GenerateStrings(50000));
+            for (int i = 0; i < 50; i++)
+                ranges.Add(GenerateStrings(25000));
 
             // Test A
-
+            var resA = CallWithTimer(() =>
+            {
+                var list = new List<string>();
+                list.AddRangesA(ranges);
+            });
+            Console.WriteLine(@"Test A: {0:s\.fff}", resA);
             // Test B
+            var resB = CallWithTimer(() =>
+            {
+                var list = new List<string>();
+                list.AddRangesB(ranges);
+            });
+            Console.WriteLine(@"Test B: {0:s\.fff}", resB);
 
+            Console.ReadLine();
         }
     }
 }
